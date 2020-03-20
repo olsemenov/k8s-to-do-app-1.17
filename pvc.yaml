@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name:  mysql-pv-claim
+  labels:
+    app:  to-do-app
+  annotations:
+    volume.beta.kubernetes.io/storage-class: to-do-app 
+spec:
+  accessModes:
+    - ReadWriteOnce 
+  resources:
+    requests:
+      storage: 5Gi
