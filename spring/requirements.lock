@@ -1,0 +1,9 @@
+dependencies:
+- name: mongodb
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 7.4.5
+- name: mysql
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 1.6.2
+digest: sha256:deb881aa0d6b258990b426847163717b6c2ab6dbdf1ec45e577a300bb63be2a8
+generated: "2020-04-02T23:41:41.548632425+03:00"

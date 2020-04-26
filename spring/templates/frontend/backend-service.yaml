@@ -1,0 +1,9 @@
+{{- if and .Values.frontend.serverUri.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "backend-alb-service"
+spec:
+  type: ExternalName
+  externalName: {{ .Values.frontend.serverUri.host | quote }}
+{{- end -}}

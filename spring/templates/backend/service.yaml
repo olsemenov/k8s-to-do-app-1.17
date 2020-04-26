@@ -1,0 +1,29 @@
+{{- if and .Values.backend.service.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.backend.name }}
+  labels:
+    app: {{ .Values.backend.name }}
+    tier: {{ .Values.backend.labels.tier }}
+spec:
+  type: {{ .Values.backend.service.type }}
+  {{- if (or (eq .Values.backend.service.type "LoadBalancer") (eq .Values.backend.service.type "NodePort")) }}
+  {{- if hasKey .Values.backend.service "externalTrafficPolicy" -}}
+  externalTrafficPolicy: {{ .Values.backend.service.externalTrafficPolicy | quote }}
+  {{- end }}
+  {{- end }}
+  {{- if eq .Values.backend.service.type "LoadBalancer" }}
+  loadBalancerIP: {{ default "" .Values.backend.service.loadBalancerIP | quote }}
+  {{- end }}
+  ports:
+  - name: http
+    port: {{ .Values.backend.service.httpPort }}
+    targetPort: {{ .Values.backend.containerPort }}
+{{- if hasKey .Values.backend.service "nodePort" }}
+    nodePort: {{ .Values.backend.service.nodePort }}
+{{- end }}
+  selector:
+    app: {{ .Values.backend.name }}
+    tier: {{ .Values.backend.labels.tier }}
+{{- end -}}

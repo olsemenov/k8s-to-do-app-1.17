@@ -1,0 +1,14 @@
+dependencies:
+- name: mongodb
+  version: 7.4.5
+  repository: https://kubernetes-charts.storage.googleapis.com
+  condition: mongodb.enabled
+  tags:
+    - mongo-database
+
+- name: mysql
+  version: 1.6.2
+  repository: https://kubernetes-charts.storage.googleapis.com
+  condition: mysql.enabled
+  tags:
+    - mysql-database

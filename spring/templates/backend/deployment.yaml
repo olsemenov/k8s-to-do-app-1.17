@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backend.name }}
+  labels:
+    app: {{ .Values.backend.name }}
+    tier: {{ .Values.backend.labels.tier }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: {{ .Values.backend.name }}
+      tier: {{ .Values.backend.labels.tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.backend.name }}
+        tier: {{ .Values.backend.labels.tier }}
+      annotations:
+        {{ toYaml .Values.backend.podAnnotations | indent 8 }}
+    spec:
+      serviceAccountName: {{ template "spring.serviceAccountName" . }}
+      securityContext:
+        {{ toYaml .Values.backend.securityContext | indent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          command:
+          - java
+          - "-Dspring.profiles.active={{ .Values.backend.springProfileActive }}"
+          - "-Dspring.data.mongodb.uri=mongodb://{{ .Values.mongodb.mongodbUsername }}:{{ .Values.mongodb.mongodbPassword }}@{{ .Values.mongodb.service.name }}:27017/{{ .Values.mongodb.mongodbDatabase }}"
+          - "-jar"
+          - "/var/app.ja"
+          env:
+          - name: DB_HOST   # Setting Database host address from configMap
+            value: {{ .Release.Name }}-mysql
+          - name: DB_NAME  # Setting Database name from configMap
+            value: {{ .Values.mysql.mysqlDatabase }}
+          - name: DB_USERNAME  # Setting Database username from Secret
+            value: {{ .Values.mysql.mysqlUser }}
+          - name: DB_PASSWORD # Setting Database password from Secret
+            value: {{ .Values.mysql.mysqlPassword }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            {{- if and (eq .Values.backend.config.type "file") (hasKey .Values.backend.config "content") }}
+            - name: config-file
+              mountPath: /config/application.yml
+              subPath: application.yml
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.containerPort }}
+              protocol: TCP
+          {{- if .Values.backend.livenessProbe }}
+          livenessProbe:
+{{ toYaml .Values.backend.livenessProbe | indent 12 }}
+          {{- end }}
+          {{- if .Values.backend.readinessProbe }}
+          readinessProbe:
+{{ toYaml .Values.backend.readinessProbe | indent 12 }}
+          {{- end }}
+          resources:
+{{ toYaml .Values.backend.resources | indent 12 }}
+    {{- with .Values.backend.nodeSelector }}
+      imagePullSecrets:
+        - name: "{{ .Values.backend.name }}-registry"
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.backend.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.backend.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: data
+          emptyDir: {}
+      {{- if and (eq .Values.backend.config.type "file") (hasKey .Values.backend.config "content") }}
+        - name: config-file
+          configMap:
+            name: {{ .Values.backend.name }}-config
+      {{- end }}

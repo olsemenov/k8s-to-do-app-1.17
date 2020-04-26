@@ -1,0 +1,36 @@
+{{- if .Values.backend.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+  {{- range $key, $value := .Values.backend.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  labels:
+    app: {{ .Values.backend.name }}
+    tier: {{ .Values.backend.labels.tier }}
+  name: {{ .Values.backend.name }}
+spec:
+  rules:
+  {{- range .Values.backend.ingress.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+        {{- if index $.Values.backend.ingress "annotations" }}
+          {{- if eq (index $.Values.backend.ingress.annotations "kubernetes.io/ingress.class" | default "") "gce" "alb" }}
+          - path: /*
+          {{- else }}{{/* Has annotations but ingress class is not "gce" nor "alb" */}}
+          - path: /
+          {{- end }}
+        {{- else}}{{/* Has no annotations */}}
+          - path: /
+        {{- end }}
+            backend:
+              serviceName: {{ .Values.backend.name }}
+              servicePort: {{ .Values.backend.service.httpPort }}
+  {{- end -}}
+  {{- if .Values.backend.ingress.tls }}
+  tls:
+{{ toYaml .Values.backend.ingress.tls | indent 4 }}
+  {{- end -}}
+{{- end -}}

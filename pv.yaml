@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: testapp1-pv
+spec:
+  capacity:
+    storage: 10Gi 
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: to-do-app 
+  claimRef:
+    namespace: testapp1
+    name: mysql-pv-claim
+  local:
+    path: /dcos/volume0/to-do-app
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - 172.31.5.143
+
