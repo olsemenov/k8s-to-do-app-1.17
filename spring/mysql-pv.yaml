@@ -1,0 +1,28 @@
+{{ if .Values.mysql.persistence.enabled -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-to-do-app
+spec:
+  capacity:
+    storage: {{ .Values.mysql.persistence.size }}
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Reclaim
+{{- if .Values.mysql.persistence.storageClass }}
+{{- if (eq "-" .Values.mysql.persistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.mysql.persistence.storageClass }}"
+{{- end }}
+{{- end }}
+#   {{- if .Values.mysql.mountOptions }}
+#   mountOptions:
+#     {{- range .Values.mysql.mountOptions }}
+#     - {{ . }}
+#     {{- end }}
+#   {{- end }}
+  hostPath:
+    path: /data/mysql-data/
+{{ end -}}
