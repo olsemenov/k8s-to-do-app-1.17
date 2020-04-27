@@ -3,20 +3,23 @@ kind: Deployment
 metadata:
   name: {{ .Values.backend.name }}
   labels:
-    app: {{ .Values.backend.name }}
-    tier: {{ .Values.backend.labels.tier }}
+    {{- with .Values.backend.labels }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.backend.replicaCount }}
   revisionHistoryLimit: 5
   selector:
     matchLabels:
-      app: {{ .Values.backend.name }}
-      tier: {{ .Values.backend.labels.tier }}
+    {{- with .Values.backend.labels }}
+{{ toYaml . | indent 6 }}
+    {{- end }}
   template:
     metadata:
       labels:
-        app: {{ .Values.backend.name }}
-        tier: {{ .Values.backend.labels.tier }}
+    {{- with .Values.backend.labels }}
+{{ toYaml . | indent 8 }}
+    {{- end }}
       annotations:
         {{ toYaml .Values.backend.podAnnotations | indent 8 }}
     spec:
