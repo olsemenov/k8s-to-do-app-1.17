@@ -14,13 +14,13 @@ backend:
   replicaCount: 1
 
   image:
-    repository: # k8s/myrepo
-    tag: # v1.4.2
+    repository: # ssonker/todoapp-backend-openjdk:1.0 
+    tag: # 
     imagePullPolicy: Always
   imageCredentials:
-    registry: quay.io
-    username: someone
-    password: sillyness
+    registry: docker.io
+    username: ssonker
+    password: hidden 
 
   springProfileActive: dev
   mongoUser: svc-dev-m2da-app
@@ -140,13 +140,13 @@ frontend:
   replicaCount: 1
 
   image:
-    repository: # k8s/myrepo
-    tag: # v1.4.2
+    repository: # ssonker/todoapp-frontend-node:1.0
+    tag: #
     imagePullPolicy: Always
   imageCredentials:
-    registry: quay.io
-    username: someone
-    password: sillyness
+    registry: docker.io
+    username: ssonker
+    password: hidden
 
   serverUri:  #####BACKEND alb
     enabled: true
