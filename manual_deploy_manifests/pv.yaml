@@ -8,12 +8,12 @@ spec:
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
-  storageClassName: to-do-app 
+  storageClassName: sample-app 
   claimRef:
     namespace: testapp1
     name: mysql-pv-claim
   local:
-    path: /dcos/volume0/to-do-app
+    path: /dcos/volume0/sample-app
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -21,5 +21,5 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-            - 172.31.5.143
+            - 172.31.13.170
 

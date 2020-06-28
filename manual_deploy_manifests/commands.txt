@@ -1,0 +1,7 @@
+kubectl create ns sample-app-manual
+
+kubectl -n sample-app-manual create -f mysql-cm.yaml
+kubectl -n sample-app-manual create -f mysql-app-secret.yaml
+kubectl -n sample-app-manual create -f mysql-root-secret.yaml
+kubectl -n sample-app-manual create -f mysql-svc-ds-pvc.yaml
+

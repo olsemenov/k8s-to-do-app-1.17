@@ -7,7 +7,7 @@ fullnameOverride: ""
 ##############    BACKEND    ####################################
 ##############################################################
 backend:
-  name: to-do-app #for app label and app name
+  name: to-do-app-backend #for app label and app name
   labels:
     tier: backend
   
@@ -133,7 +133,7 @@ backend:
 ##############    FRONTEND    ####################################
 ##############################################################
 frontend:
-  name: to-do-app #for app label and app name
+  name: to-do-app-frontend #for app label and app name
   labels:
     tier: frontend
 

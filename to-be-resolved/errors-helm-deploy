@@ -1,0 +1,2 @@
+[root@ip-172-31-6-74 k8s-to-do-app-1.17]# helm install -n sample-app-helm sample-app spring-helm/
+Error: Ingress.extensions "to-do-app-frontend" is invalid: spec: Invalid value: []networking.IngressRule(nil): either `backend` or `rules` must be specified

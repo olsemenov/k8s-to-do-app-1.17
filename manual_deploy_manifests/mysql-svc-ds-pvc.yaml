@@ -4,18 +4,18 @@ kind: Service
 metadata:
   name: mysql  # DNS name 
   labels:
-    app-id: todoapp
+    app-id: sampleapp
     app-tier: d
-    tenant-id: mercer
+    tenant-id: finance
     tenant-team: dev1
 spec:
   ports:
     - port: 3306
       targetPort: 3306
   selector:       # mysql Pod Should contain same labels
-    app-id: todoapp
+    app-id: sampleapp
     app-tier: db
-    tenant-id: mercer
+    tenant-id: finance
     tenant-team: dev1
   clusterIP: None  # We Use DNS, Thus ClusterIP is not relevant
 ---
@@ -25,12 +25,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim # name of PVC essential for identifying the storage data 
   labels:
-    app-id: todoapp
+    app-id: sampleapp
     app-tier: db
-    tenant-id: mercer
+    tenant-id: finance
     tenant-team: dev1
   annotations:
-    volume.beta.kubernetes.io/storage-class: to-do-app
+    volume.beta.kubernetes.io/storage-class: sample-app
 spec:
   accessModes:
     - ReadWriteOnce
@@ -44,25 +44,25 @@ kind: Deployment
 metadata:
   name: mysql
   labels:
-    app-id: todoapp
+    app-id: sampleapp
     app-tier: db
-    tenant-id: mercer
+    tenant-id: finance
     tenant-team: dev1
 spec:
   selector: # mysql Pod Should contain same labels 
     matchLabels:
-      app-id: todoapp
+      app-id: sampleapp
       app-tier: db
-      tenant-id: mercer
+      tenant-id: finance
       tenant-team: dev1
   strategy:
     type: Recreate
   template:
     metadata:
       labels: # Must match 'Service' and 'Deployment' selectors
-        app-id: todoapp
+        app-id: sampleapp
         app-tier: db
-        tenant-id: mercer
+        tenant-id: finance
         tenant-team: dev1
     spec:
       containers:
@@ -96,7 +96,7 @@ spec:
           name: mysql
         volumeMounts:        # Mounting voulume obtained from Persistent Volume Claim
         - name: mysql-persistent-storage
-          mountPath: /dcos/volume0/to-do-app
+          mountPath: /dcos/volume0/sample-app
       volumes:
       - name: mysql-persistent-storage # Obtaining 'volume' from PVC
         persistentVolumeClaim:
