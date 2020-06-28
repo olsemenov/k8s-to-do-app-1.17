@@ -48,7 +48,7 @@ spec:
     spec:                 
       containers: 
       - name: sample-app-frontend 
-        image: kubernetesdemo/sample-app-frontend # docker image of frontend application
+        image: kubernetesdemo/to-do-app-frontend # docker image of frontend application
         env: # Setting Environmental Variables
           -  name: SERVER_URI # Setting Backend URI from configMap
              valueFrom:

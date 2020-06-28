@@ -1,7 +1,10 @@
 kubectl create ns sample-app-manual
-
+# Create storage class sample-app through rancher UI
 kubectl -n sample-app-manual create -f mysql-cm.yaml
 kubectl -n sample-app-manual create -f mysql-app-secret.yaml
 kubectl -n sample-app-manual create -f mysql-root-secret.yaml
 kubectl -n sample-app-manual create -f mysql-svc-ds-pvc.yaml
+kubectl -n sample-app-manual apply -f backend-svc-ds.yaml
+kubectl -n sample-app-manual create -f backend-cm.yaml
 
+kubectl -n sample-app-manual create -f frontend-svc-ds.yaml

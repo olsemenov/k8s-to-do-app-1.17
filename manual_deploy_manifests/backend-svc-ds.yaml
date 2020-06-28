@@ -48,7 +48,7 @@ spec:
     spec:                 
       containers: 
       - name: sample-app-backend 
-        image: kubernetesdemo/to-do-app-frontend   # docker image of backend application
+        image: kubernetesdemo/to-do-app-backend   # docker image of backend application
         env:   # Setting Enviornmental Variables
           - name: DB_HOST   # Setting Database host address from configMap
             valueFrom: 
