@@ -14,13 +14,13 @@ backend:
   replicaCount: 1
 
   image:
-    repository: sonker/todoapp-backend-openjdk
-    tag: 1.0
+    repository: ssonker/todoapp-backend-openjdk
+    tag: "1.0"
     imagePullPolicy: Always
   imageCredentials:
     registry: docker.io
     username: ssonker
-    password: hidden 
+    password: hidden
 
   springProfileActive: dev
   mongoUser: svc-dev-m2da-app
@@ -118,8 +118,8 @@ backend:
 
     ## hostnames must be provided if Ingress is enabled
     ##
-    # hosts:
-    #   - spring.example.io
+    hosts:
+      - spring.example.io
 
     ## Ingress TLS configuration secrets
     ## Must be manually created in the namespace
@@ -141,12 +141,12 @@ frontend:
 
   image:
     repository: ssonker/todoapp-frontend-node
-    tag: 1.0
+    tag: "1.0"
     imagePullPolicy: Always
   imageCredentials:
     registry: docker.io
     username: ssonker
-    password: hidden
+    password: hidden 
 
   serverUri:  #####BACKEND alb
     enabled: true
@@ -224,8 +224,8 @@ frontend:
 
     ## hostnames must be provided if Ingress is enabled
     ##
-    # hosts:
-    #   - spring.example.io
+    hosts:
+      - spring.example.io
 
     ## Ingress TLS configuration secrets
     ## Must be manually created in the namespace
@@ -300,14 +300,14 @@ mysql:
 ##############    MONGO    ####################################
 ##############################################################
 mongodb:
-  image:
+  #image:
     ## Bitnami MongoDB image name
     ##
-    repository: bitnami/mongodb
+    #repository: bitnami/mongodb
     ## Bitnami MongoDB image tag
     ## ref: https://hub.docker.com/r/bitnami/mongodb/tags/
     ##
-    tag: 4.2.4-debian-10-r0
+    #tag: 4.2.4-debian-10-r0
 
   ## Enable authentication
   ## ref: https://docs.mongodb.com/manual/tutorial/enable-authentication/
@@ -326,6 +326,25 @@ mongodb:
   mongodbUsername: username
   mongodbPassword: password
   mongodbDatabase: database
+
+  volumePermissions:
+    enabled: true
+
+  persistence:
+    enabled: true
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 5Gi
+    annotations: {}
+
+
 
   service:
     ## Specify an explicit service name.

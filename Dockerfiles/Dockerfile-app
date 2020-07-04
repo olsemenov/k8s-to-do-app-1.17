@@ -1,0 +1,25 @@
+# build stage build the jar with all our resources
+FROM ssonker/todoapp-openjdk:1.0 as build
+RUN apt update && apt install -y gradle
+ARG VERSION
+ARG JAR_PATH
+
+VOLUME /tmp
+WORKDIR /
+ADD . .
+
+RUN ./gradlew --stacktrace clean test build
+RUN mv /$JAR_PATH /app.jar
+
+# package stage
+FROM ssonker/todoapp-openjre:1.0 
+WORKDIR /var/
+# copy only the built jar and nothing else
+COPY --from=build /app.jar /
+
+ENV VERSION=$VERSION
+ENV JAVA_OPTS=-Dspring.profiles.active=production
+
+EXPOSE 5000
+
+ENTRYPOINT ["sh","-c","java -jar -Dspring.profiles.active=production /app.jar"]

@@ -35,7 +35,7 @@ spec:
           - "-Dspring.profiles.active={{ .Values.backend.springProfileActive }}"
           - "-Dspring.data.mongodb.uri=mongodb://{{ .Values.mongodb.mongodbUsername }}:{{ .Values.mongodb.mongodbPassword }}@{{ .Values.mongodb.service.name }}:27017/{{ .Values.mongodb.mongodbDatabase }}"
           - "-jar"
-          - "/var/app.ja"
+          - "/var/app.jar"
           env:
           - name: DB_HOST   # Setting Database host address from configMap
             value: {{ .Release.Name }}-mysql

@@ -1,0 +1,28 @@
+{{ if .Values.mongodb.persistence.enabled -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-mongodb-to-do-app
+spec:
+  capacity:
+    storage: {{ .Values.mongodb.persistence.size }}
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+{{- if .Values.mongodb.persistence.storageClass }}
+{{- if (eq "-" .Values.mongodb.persistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.mongodb.persistence.storageClass }}"
+{{- end }}
+{{- end }}
+#   {{- if .Values.mongodb.mountOptions }}
+#   mountOptions:
+#     {{- range .Values.mongodb.mountOptions }}
+#     - {{ . }}
+#     {{- end }}
+#   {{- end }}
+  hostPath:
+    path: /data/mongodb-data/
+{{ end -}}
